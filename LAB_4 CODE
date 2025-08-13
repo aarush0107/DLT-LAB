@@ -1,3 +1,6 @@
+#MAIN CODE
+
+
 import idx2numpy
 import numpy as np
 import tensorflow as tf
@@ -45,3 +48,38 @@ print(f"Test Accuracy: {accuracy*100:.2f}%")
 
 model.save("mnist_ffnn_model.h5")
 print("Model saved as mnist_ffnn_model.h5")
+
+
+
+
+#TESTING CODE
+
+
+
+import cv2
+import numpy as np
+import tensorflow as tf
+
+model = tf.keras.models.load_model("mnist_ffnn_model.h5")
+
+image_path = r"C:\Users\aarus\OneDrive\Desktop\SRM\DLT\LAB 4\test2.jpg"
+
+img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+if img is None:
+    raise FileNotFoundError(f"Image not found at {image_path}")
+
+img = cv2.resize(img, (28, 28))
+
+if np.mean(img) > 127:
+    img = 255 - img
+
+img = img.astype("float32") / 255.0
+
+img = img.reshape(1, 28*28)
+
+pred = model.predict(img)
+predicted_digit = np.argmax(pred)
+
+print(f"Predicted digit: {predicted_digit}")
+
